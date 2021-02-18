@@ -5,18 +5,18 @@
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="xv6-labs-2020" targetName="Makefile" />
-      <config projectName="xv6-labs-2020" targetName="tags" />
-      <config projectName="xv6-labs-2020" targetName="handin-check" />
-      <config projectName="xv6-labs-2020" targetName="qemu" />
-      <config projectName="xv6-labs-2020" targetName="README" />
-      <config projectName="xv6-labs-2020" targetName="print-gdbport" />
-      <config projectName="xv6-labs-2020" targetName="handin" />
-      <config projectName="xv6-labs-2020" targetName="tarball-pref" />
-      <config projectName="xv6-labs-2020" targetName="qemu-gdb" />
-      <config projectName="xv6-labs-2020" targetName="tarball" />
-      <config projectName="xv6-labs-2020" targetName="grade" />
-      <config projectName="xv6-labs-2020" targetName="_init" />
+      <config projectName="xv6-labs" targetName="qemu-gdb" />
+      <config projectName="xv6-labs" targetName="tarball-pref" />
+      <config projectName="xv6-labs" targetName="handin" />
+      <config projectName="xv6-labs" targetName="README" />
+      <config projectName="xv6-labs" targetName="grade" />
+      <config projectName="xv6-labs" targetName="Makefile" />
+      <config projectName="xv6-labs" targetName="qemu" />
+      <config projectName="xv6-labs" targetName="tarball" />
+      <config projectName="xv6-labs" targetName="tags" />
+      <config projectName="xv6-labs" targetName="_init" />
+      <config projectName="xv6-labs" targetName="print-gdbport" />
+      <config projectName="xv6-labs" targetName="handin-check" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -25,13 +25,19 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5fc2db43-7800-4617-8607-28fdb91a12e0" name="Default Changelist" comment="" />
+    <list default="true" id="5fc2db43-7800-4617-8607-28fdb91a12e0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/xv6-labs-2020.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/xv6-labs-2020.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ClangdSettings">
+    <option name="clangTidyViaClangd" value="false" />
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="ExternalProjectsData">
@@ -56,14 +62,14 @@
         <entry>
           <key>
             <ExternalProjectPojo>
-              <option name="name" value="xv6-labs-2020" />
+              <option name="name" value="xv6-labs" />
               <option name="path" value="$PROJECT_DIR$" />
             </ExternalProjectPojo>
           </key>
           <value>
             <list>
               <ExternalProjectPojo>
-                <option name="name" value="xv6-labs-2020" />
+                <option name="name" value="xv6-labs" />
                 <option name="path" value="$PROJECT_DIR$" />
               </ExternalProjectPojo>
             </list>
@@ -95,75 +101,75 @@
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="MakefileSettings" />
   </component>
-  <component name="RunManager" selected="Makefile Application.grade">
+  <component name="RunManager" selected="Makefile Application.qemu">
     <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="CLION.EXTERNAL.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Makefile" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs-2020" TARGET_NAME="Makefile" CONFIG_NAME="Makefile" version="1">
+    <configuration name="Makefile" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="Makefile" CONFIG_NAME="Makefile" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="README" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs-2020" TARGET_NAME="README" CONFIG_NAME="README" version="1">
+    <configuration name="README" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="README" CONFIG_NAME="README" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="_init" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs-2020" TARGET_NAME="_init" CONFIG_NAME="_init" version="1">
+    <configuration name="_init" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="_init" CONFIG_NAME="_init" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="grade" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs-2020" TARGET_NAME="grade" CONFIG_NAME="grade" version="1">
+    <configuration name="grade" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="grade" CONFIG_NAME="grade" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="handin-check" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs-2020" TARGET_NAME="handin-check" CONFIG_NAME="handin-check" version="1">
+    <configuration name="handin-check" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="handin-check" CONFIG_NAME="handin-check" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="handin" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs-2020" TARGET_NAME="handin" CONFIG_NAME="handin" version="1">
+    <configuration name="handin" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="handin" CONFIG_NAME="handin" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="print-gdbport" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs-2020" TARGET_NAME="print-gdbport" CONFIG_NAME="print-gdbport" version="1">
+    <configuration name="print-gdbport" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="print-gdbport" CONFIG_NAME="print-gdbport" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="qemu-gdb" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs-2020" TARGET_NAME="qemu-gdb" CONFIG_NAME="qemu-gdb" version="1">
+    <configuration name="qemu-gdb" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="qemu-gdb" CONFIG_NAME="qemu-gdb" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="qemu" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs-2020" TARGET_NAME="qemu" CONFIG_NAME="qemu" version="1">
+    <configuration name="qemu" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="qemu" CONFIG_NAME="qemu" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="tags" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs-2020" TARGET_NAME="tags" CONFIG_NAME="tags" version="1">
+    <configuration name="tags" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="tags" CONFIG_NAME="tags" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="tarball-pref" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs-2020" TARGET_NAME="tarball-pref" CONFIG_NAME="tarball-pref" version="1">
+    <configuration name="tarball-pref" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="tarball-pref" CONFIG_NAME="tarball-pref" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="tarball" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs-2020" TARGET_NAME="tarball" CONFIG_NAME="tarball" version="1">
+    <configuration name="tarball" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="tarball" CONFIG_NAME="tarball" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <list>
@@ -198,6 +204,9 @@
       <workItem from="1613565444037" duration="1519000" />
       <workItem from="1613566976838" duration="1130000" />
       <workItem from="1613568120513" duration="8329000" />
+      <workItem from="1613577455514" duration="69000" />
+      <workItem from="1613631779123" duration="20000" />
+      <workItem from="1613631812967" duration="2809000" />
     </task>
     <servers />
   </component>
