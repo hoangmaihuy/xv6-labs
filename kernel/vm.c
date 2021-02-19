@@ -440,3 +440,31 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
     return -1;
   }
 }
+
+// print page table in format
+void
+ptprint(pagetable_t pagetable, int indent)
+{
+  // walk through 2^9 = 512 PTE
+  for (int i = 0; i < 512; i++)
+  {
+    pte_t pte = pagetable[i];
+    if (pte & PTE_V) // pte is valid
+    {
+      pagetable_t child = (pagetable_t)PTE2PA(pte);
+      printf("..");
+      for (int j = 1; j < indent; j++) printf(" ..");
+      printf("%d: pte %p pa %p\n", i, pte, child);
+
+      if (indent < 3)
+        ptprint(child, indent+1);
+    }
+  }
+}
+
+void
+vmprint(pagetable_t pagetable)
+{
+  printf("page table %p\n", pagetable);
+  ptprint(pagetable, 1);
+}
