@@ -225,9 +225,6 @@ proc_kpagetable(struct proc *p)
   // virtio mmio disk interface
   ukvmmap(kpagetable, VIRTIO0, VIRTIO0, PGSIZE, PTE_R | PTE_W);
 
-  // CLINT
-  ukvmmap(kpagetable, CLINT, CLINT, 0x10000, PTE_R | PTE_W);
-
   // PLIC
   ukvmmap(kpagetable, PLIC, PLIC, 0x400000, PTE_R | PTE_W);
 
@@ -240,6 +237,9 @@ proc_kpagetable(struct proc *p)
   // map the trampoline for trap entry/exit to
   // the highest virtual address in the kernel.
   ukvmmap(kpagetable, TRAMPOLINE, (uint64)trampoline, PGSIZE, PTE_R | PTE_X);
+
+  // map trapframe
+  ukvmmap(kpagetable, TRAPFRAME, (uint64)(p->trapframe), PGSIZE, PTE_R | PTE_W);
 
   return kpagetable;
 }
@@ -297,6 +297,9 @@ userinit(void)
   uvminit(p->pagetable, initcode, sizeof(initcode));
   p->sz = PGSIZE;
 
+  // init user address space in its own kernel page table
+  ukvmcopy(p->pagetable, p->kpagetable, 0, p->sz);
+
   // prepare for the very first "return" from kernel to user.
   p->trapframe->epc = 0;      // user program counter
   p->trapframe->sp = PGSIZE;  // user stack pointer
@@ -319,12 +322,15 @@ growproc(int n)
 
   sz = p->sz;
   if(n > 0){
+    if (PGROUNDUP(sz + n) >= PLIC)
+      return -1;
     if((sz = uvmalloc(p->pagetable, sz, sz + n)) == 0) {
       return -1;
     }
   } else if(n < 0){
     sz = uvmdealloc(p->pagetable, sz, sz + n);
   }
+  ukvmcopy(p->pagetable, p->kpagetable, p->sz, sz);
   p->sz = sz;
   return 0;
 }
@@ -350,6 +356,8 @@ fork(void)
     return -1;
   }
   np->sz = p->sz;
+  // copy user address space to kernel page table
+  ukvmcopy(np->pagetable, np->kpagetable, 0, np->sz);
 
   np->parent = p;
 
