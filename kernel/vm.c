@@ -398,8 +398,6 @@ copyout(pagetable_t pagetable, uint64 dstva, char *src, uint64 len)
 int
 copyin(pagetable_t pagetable, char *dst, uint64 srcva, uint64 len)
 {
-  return copyin_new(pagetable, dst, srcva, len);
-  /*
   uint64 n, va0, pa0;
 
   while(len > 0){
@@ -417,7 +415,6 @@ copyin(pagetable_t pagetable, char *dst, uint64 srcva, uint64 len)
     srcva = va0 + PGSIZE;
   }
   return 0;
-   */
 }
 
 // Copy a null-terminated string from user to kernel.
