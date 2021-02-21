@@ -371,7 +371,7 @@ ukvmcopy(pagetable_t pagetable, pagetable_t kpagetable, uint64 old_sz, uint64 ne
       panic("ukvmcopy: dst pte alloc failed");
 
     pa = PTE2PA(*src);
-    // Allow accessing this page in kernel mode by turn off PTE_U flag
+    // Not allow accessing this page in user mode by turn off PTE_U flag
     flags = PTE_FLAGS(*src) & (~PTE_U);
     *dst = PA2PTE(pa) | flags;
   }
