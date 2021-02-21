@@ -1,0 +1,11 @@
+RISC-V assembly:
+- a0-a7 contain arguments for function, a2 hold 13 in main's call to printf
+- No call to function f in main and no call to g in f, compiler optimized these.
+Compiler calculated f(8)+1 = 12 then pass it to printf (li a1, 12)
+- printf at 0x630
+- ra = 0x30
+- output: HE110 World, because 57616 = 0xE110, and 0x00646c72 map to ascii is: 64 = d, 6c = l, 72 = r.
+Because RISC-V is little-endian, so printf("%s", &i) should print rld
+If RISC-V is big-endian, i should be 0x726c6400, we don't need to change 57616 because its hex value does not change
+- The answer is not a specific value because printf just takes value in register a1 as second argument
+but does not know if users passed it or not, so whatever value is in a1 will be printed out
