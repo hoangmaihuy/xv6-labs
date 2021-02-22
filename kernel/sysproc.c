@@ -121,8 +121,10 @@ sys_sigreturn(void)
 {
   struct proc *p = myproc();
   acquire(&p->lock);
-  p->alarm_passed = 0;
-  memmove(p->trapframe, p->alarmframe, sizeof(struct alarmframe));
+
+  memmove(p->trapframe, p->alarmframe, sizeof(struct alarmframe)); // restore saved registers
+  p->alarm_passed = 0; // re-arm alarm
+
   release(&p->lock);
   return 0;
 }

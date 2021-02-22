@@ -79,20 +79,14 @@ usertrap(void)
   // give up the CPU if this is a timer interrupt.
   if(which_dev == 2)
   {
-    if (p->alarm_interval > 0 && p->alarm_passed >= 0) // alarm handler was set
+    acquire(&p->lock);
+    if (p->alarm_interval > 0 && p->alarm_passed != -1) // alarm handler was set
     {
-      acquire(&p->lock);
       p->alarm_passed++;
       if (p->alarm_passed >= p->alarm_interval)
-      {
         alarmtrap(p);
-        release(&p->lock);
-      }
-      else
-      {
-        release(&p->lock);
-      }
     }
+    release(&p->lock);
     yield();
   }
 
@@ -239,6 +233,6 @@ void
 alarmtrap(struct proc *p)
 {
   p->alarm_passed = -1; // avoid re-entrant
-  memmove(p->alarmframe, p->trapframe, sizeof(struct alarmframe));
+  memmove(p->alarmframe, p->trapframe, sizeof(struct alarmframe)); // save registers in trapframe
   p->trapframe->epc = p->alarm_handler; // pass alarm handler as next instruction
 }

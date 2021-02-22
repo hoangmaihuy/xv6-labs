@@ -132,7 +132,7 @@ struct proc {
   int killed;                  // If non-zero, have been killed
   int xstate;                  // Exit status to be returned to parent's wait
   int pid;                     // Process ID
-  uint alarm_passed;           // Ticks passed since last alarm
+  int alarm_passed;           // Ticks passed since last alarm
   int alarm_interval;
   uint64 alarm_handler;        // Virtual address point to alarm handler function
 
