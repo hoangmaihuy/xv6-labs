@@ -113,6 +113,12 @@ found:
     return 0;
   }
 
+  // Allocate a alarmframe page
+  if((p->alarmframe = (struct alarmframe *)kalloc()) == 0){
+    release(&p->lock);
+    return 0;
+  }
+
   // An empty user page table.
   p->pagetable = proc_pagetable(p);
   if(p->pagetable == 0){
