@@ -67,6 +67,37 @@ usertrap(void)
     syscall();
   } else if((which_dev = devintr()) != 0){
     // ok
+  } else if (r_scause() == 13 || r_scause() == 15) {
+    // page fault
+    uint64 va = r_stval(); // virtual address that cause page fault
+    if (va > p->sz || va < p->trapframe->sp)
+    {
+      p->killed = 1;
+    }
+    else
+    {
+      // Allocate new page
+      va = PGROUNDDOWN(va); // round down to page boundary
+      if (uvmalloc(p->pagetable, va, va+PGSIZE) == 0)
+      {
+        p->killed = 1;
+      }
+    }
+    /*
+    uint64 pa = (uint64)kalloc();
+    if (pa == 0)
+    {
+      p->killed = 1;
+    }
+    else
+    {
+      if (mappages(p->pagetable, va, PGSIZE, pa, PTE_R|PTE_W|PTE_U) != 0)
+      {
+        kfree((void*)pa);
+        p->killed = 1;
+      }
+    }
+     */
   } else {
     printf("usertrap(): unexpected scause %p pid=%d\n", r_scause(), p->pid);
     printf("            sepc=%p stval=%p\n", r_sepc(), r_stval());
