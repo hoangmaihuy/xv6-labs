@@ -5,6 +5,8 @@
 #include "riscv.h"
 #include "defs.h"
 #include "fs.h"
+#include "spinlock.h"
+#include "proc.h"
 
 /*
  * the kernel's page table.
@@ -101,10 +103,12 @@ walkaddr(pagetable_t pagetable, uint64 va)
     return 0;
 
   pte = walk(pagetable, va, 0);
-  if(pte == 0)
-    return 0;
-  if((*pte & PTE_V) == 0)
-    return 0;
+  if(pte == 0 || (*pte & PTE_V) == 0)
+  {
+    if (lazyalloc(va) == 0)
+      return 0;
+    pte = walk(pagetable, va, 0);
+  }
   if((*pte & PTE_U) == 0)
     return 0;
   pa = PTE2PA(*pte);
@@ -283,7 +287,7 @@ freewalk(pagetable_t pagetable)
       freewalk((pagetable_t)child);
       pagetable[i] = 0;
     } else if(pte & PTE_V){
-      panic("freewalk: leaf");
+      continue;
     }
   }
   kfree((void*)pagetable);
@@ -445,4 +449,27 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
   } else {
     return -1;
   }
+}
+
+// Lazy allocation a page in user memory
+// return physical address or 0 if failed
+int lazyalloc(uint64 va)
+{
+  struct proc* p = myproc();
+  if (va >= p->sz || va < p->trapframe->sp)
+    return 0;
+
+  va = PGROUNDDOWN(va); // round down to page boundary
+  uint64 pa = (uint64)kalloc();
+  if (pa == 0)
+    return 0;
+  else
+  {
+    if (mappages(p->pagetable, va, PGSIZE, pa, PTE_R|PTE_W|PTE_U) != 0)
+    {
+      kfree((void*)pa);
+      return 0;
+    }
+  }
+  return pa;
 }
