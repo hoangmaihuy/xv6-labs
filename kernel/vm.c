@@ -314,7 +314,7 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
   char *mem;
 
   for(i = 0; i < sz; i += PGSIZE){
-    if((pte = walk(old, i, 1)) == 0) // create mapping when parent process fork
+    if((pte = walk(old, i, 0)) == 0)
     {
       continue;
       // panic("uvmcopy: pte should exist");
