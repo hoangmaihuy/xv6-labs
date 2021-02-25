@@ -74,7 +74,11 @@ pte_t *
 walk(pagetable_t pagetable, uint64 va, int alloc)
 {
   if(va >= MAXVA)
+  {
+    vmprint(pagetable);
+    printf("walk: va=%p\n", va);
     panic("walk");
+  }
 
   for(int level = 2; level > 0; level--) {
     pte_t *pte = &pagetable[PX(level, va)];
@@ -369,6 +373,8 @@ copyout(pagetable_t pagetable, uint64 dstva, char *src, uint64 len)
 
   while(len > 0){
     va0 = PGROUNDDOWN(dstva);
+    if (va0 >= MAXVA)
+      return -1;
     pte_t* pte = walk(pagetable, va0, 0);
     if (pte == 0)
       return -1;
@@ -480,7 +486,7 @@ copyonwrite(uint64 va)
   void* mem = kalloc();
   if (mem == 0)
   {
-    printf("copyonwrite: out of memory\n");
+    //printf("copyonwrite: out of memory\n");
     return -1;
   }
 
