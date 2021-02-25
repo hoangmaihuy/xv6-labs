@@ -3,6 +3,7 @@
 #include "kernel/types.h"
 #include "user/user.h"
 #include "kernel/fcntl.h"
+#include "kernel/riscv.h"
 
 // Parsed command representation
 #define EXEC  1

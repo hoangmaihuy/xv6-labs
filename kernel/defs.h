@@ -63,6 +63,8 @@ void            ramdiskrw(struct buf*);
 void*           kalloc(void);
 void            kfree(void *);
 void            kinit(void);
+int             ref_idx(uint64);
+void            change_refcnt(uint64, int);
 
 // log.c
 void            initlog(int, struct superblock*);
@@ -79,6 +81,7 @@ int             pipewrite(struct pipe*, uint64, int);
 // printf.c
 void            printf(char*, ...);
 void            panic(char*) __attribute__((noreturn));
+void            backtrace(void);
 void            printfinit(void);
 
 // proc.c
@@ -171,6 +174,8 @@ uint64          walkaddr(pagetable_t, uint64);
 int             copyout(pagetable_t, uint64, char *, uint64);
 int             copyin(pagetable_t, char *, uint64, uint64);
 int             copyinstr(pagetable_t, char *, uint64, uint64);
+int             copyonwrite(uint64);
+void            vmprint(pagetable_t);
 
 // plic.c
 void            plicinit(void);
