@@ -1,0 +1,4 @@
+Race condition:
+ When two threads insert at the same time into a same bucket,
+ updating table's first element (*p = e) can cause missing entry.
+
