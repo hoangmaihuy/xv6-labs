@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="xv6-labs" targetName="qemu-gdb" />
+      <config projectName="xv6-labs" targetName="barrier" />
+      <config projectName="xv6-labs" targetName="handin" />
+      <config projectName="xv6-labs" targetName="tarball-pref" />
+      <config projectName="xv6-labs" targetName="README" />
+      <config projectName="xv6-labs" targetName="grade" />
+      <config projectName="xv6-labs" targetName="ph" />
+      <config projectName="xv6-labs" targetName="Makefile" />
+      <config projectName="xv6-labs" targetName="qemu" />
+      <config projectName="xv6-labs" targetName="tarball" />
+      <config projectName="xv6-labs" targetName="_init" />
+      <config projectName="xv6-labs" targetName="tags" />
+      <config projectName="xv6-labs" targetName="print-gdbport" />
+      <config projectName="xv6-labs" targetName="handin-check" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" ENABLED="true" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5fc2db43-7800-4617-8607-28fdb91a12e0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/notxv6/barrier.c" beforeDir="false" afterPath="$PROJECT_DIR$/notxv6/barrier.c" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="clangTidyViaClangd" value="false" />
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MakefileLocalSettings">
+    <option name="availableProjects">
+      <map>
+        <entry>
+          <key>
+            <ExternalProjectPojo>
+              <option name="name" value="xv6-labs" />
+              <option name="path" value="$PROJECT_DIR$" />
+            </ExternalProjectPojo>
+          </key>
+          <value>
+            <list>
+              <ExternalProjectPojo>
+                <option name="name" value="xv6-labs" />
+                <option name="path" value="$PROJECT_DIR$" />
+              </ExternalProjectPojo>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="projectSyncType">
+      <map>
+        <entry key="$PROJECT_DIR$" value="RE_IMPORT" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectId" id="1ob9JkhPlSZXHFYqrDi07Zqx4gl" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../xv6-labs-2020-mit" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/kernel" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Makefile Application.barrier">
+    <configuration name="Makefile" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="Makefile" CONFIG_NAME="Makefile" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="README" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="README" CONFIG_NAME="README" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="_init" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="_init" CONFIG_NAME="_init" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="barrier" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="barrier" CONFIG_NAME="barrier" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="grade" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="grade" CONFIG_NAME="grade" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="handin-check" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="handin-check" CONFIG_NAME="handin-check" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="handin" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="handin" CONFIG_NAME="handin" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ph" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="ph" CONFIG_NAME="ph" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="print-gdbport" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="print-gdbport" CONFIG_NAME="print-gdbport" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="qemu-gdb" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="qemu-gdb" CONFIG_NAME="qemu-gdb" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="qemu" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="qemu" CONFIG_NAME="qemu" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="tags" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="tags" CONFIG_NAME="tags" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="tarball-pref" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="tarball-pref" CONFIG_NAME="tarball-pref" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="tarball" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="xv6-labs" TARGET_NAME="tarball" CONFIG_NAME="tarball" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Makefile Application.grade" />
+      <item itemvalue="Makefile Application.handin" />
+      <item itemvalue="Makefile Application.handin-check" />
+      <item itemvalue="Makefile Application.tarball" />
+      <item itemvalue="Makefile Application.tarball-pref" />
+      <item itemvalue="Makefile Application._init" />
+      <item itemvalue="Makefile Application.barrier" />
+      <item itemvalue="Makefile Application.Makefile" />
+      <item itemvalue="Makefile Application.ph" />
+      <item itemvalue="Makefile Application.print-gdbport" />
+      <item itemvalue="Makefile Application.qemu" />
+      <item itemvalue="Makefile Application.qemu-gdb" />
+      <item itemvalue="Makefile Application.README" />
+      <item itemvalue="Makefile Application.tags" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5fc2db43-7800-4617-8607-28fdb91a12e0" name="Default Changelist" comment="" />
+      <created>1613544354162</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1613544354162</updated>
+      <workItem from="1613544356634" duration="35000" />
+      <workItem from="1613544402165" duration="79000" />
+      <workItem from="1613544498064" duration="2841000" />
+      <workItem from="1613560041502" duration="440000" />
+      <workItem from="1613565172565" duration="132000" />
+      <workItem from="1613565318440" duration="113000" />
+      <workItem from="1613565444037" duration="1519000" />
+      <workItem from="1613566976838" duration="1130000" />
+      <workItem from="1613568120513" duration="8329000" />
+      <workItem from="1613577455514" duration="69000" />
+      <workItem from="1613631779123" duration="20000" />
+      <workItem from="1613631812967" duration="11502000" />
+      <workItem from="1613656514367" duration="1990000" />
+      <workItem from="1613701813457" duration="4993000" />
+      <workItem from="1613713852638" duration="6916000" />
+      <workItem from="1613730934042" duration="621000" />
+      <workItem from="1613738873149" duration="7786000" />
+      <workItem from="1613790365657" duration="11204000" />
+      <workItem from="1613815441279" duration="9839000" />
+      <workItem from="1613885714513" duration="996000" />
+      <workItem from="1613896378353" duration="777000" />
+      <workItem from="1613913864136" duration="7297000" />
+      <workItem from="1613961038758" duration="9789000" />
+      <workItem from="1613980199266" duration="46000" />
+      <workItem from="1614048978712" duration="12331000" />
+      <workItem from="1614067037886" duration="599000" />
+      <workItem from="1614079190267" duration="679000" />
+      <workItem from="1614084319850" duration="8591000" />
+      <workItem from="1614150165555" duration="542000" />
+      <workItem from="1614150953671" duration="11997000" />
+      <workItem from="1614165046533" duration="10051000" />
+      <workItem from="1614223381026" duration="2386000" />
+      <workItem from="1614324783377" duration="637000" />
+      <workItem from="1614354899302" duration="2317000" />
+      <workItem from="1614410163843" duration="8323000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
