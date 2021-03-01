@@ -316,6 +316,37 @@ sys_open(void)
     }
   }
 
+  if ((ip->type == T_SYMLINK) && !(omode & O_NOFOLLOW))
+  {
+    for (int follow_cnt = 1; follow_cnt <= MAXFOLLOW; follow_cnt++)
+    {
+      if (follow_cnt == MAXFOLLOW)
+      {
+        //printf("cycle detected when following symlink\n");
+        iunlockput(ip);
+        end_op();
+        return -1;
+      }
+      if (readi(ip, 0, (uint64)path, 0, MAXPATH) == 0)
+      {
+        //printf("read symlink target failed\n");
+        iunlockput(ip);
+        end_op();
+        return -1;
+      }
+      iunlockput(ip);
+      if ((ip = namei(path)) == 0)
+      {
+        //printf("symlink target not found\n");
+        end_op();
+        return -1;
+      }
+      ilock(ip);
+      if (ip->type != T_SYMLINK)
+        break;
+    }
+  }
+
   if(ip->type == T_DEVICE && (ip->major < 0 || ip->major >= NDEV)){
     iunlockput(ip);
     end_op();
@@ -482,5 +513,35 @@ sys_pipe(void)
     fileclose(wf);
     return -1;
   }
+  return 0;
+}
+
+uint64
+sys_symlink(void)
+{
+  char target[MAXPATH], path[MAXPATH];
+  memset(target, 0, sizeof(target));
+  memset(path, 0, sizeof(path));
+
+  if (argstr(0, target, MAXPATH) < 0 || argstr(1, path, MAXPATH) < 0)
+    return -1;
+
+  begin_op();
+  struct inode* ip = create(path, T_SYMLINK, 0, 0);
+  if (ip == 0)
+  {
+    //printf("create symlink inode failed\n");
+    end_op();
+    return -1;
+  }
+
+  if (writei(ip, 0, (uint64)target, 0, MAXPATH) < MAXPATH)
+  {
+    //printf("write symlink failed\n");
+    end_op();
+    return -1;
+  }
+  iunlockput(ip);
+  end_op();
   return 0;
 }
