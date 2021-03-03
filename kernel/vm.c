@@ -5,6 +5,11 @@
 #include "riscv.h"
 #include "defs.h"
 #include "fs.h"
+#include "spinlock.h"
+#include "sleeplock.h"
+#include "file.h"
+#include "proc.h"
+#include "fcntl.h"
 
 /*
  * the kernel's page table.
@@ -146,7 +151,10 @@ mappages(pagetable_t pagetable, uint64 va, uint64 size, uint64 pa, int perm)
     if((pte = walk(pagetable, a, 1)) == 0)
       return -1;
     if(*pte & PTE_V)
+    {
+      printf("remap: va=%p, pa=%p, pte=%p\n", va, pa, *pte);
       panic("remap");
+    }
     *pte = PA2PTE(pa) | perm | PTE_V;
     if(a == last)
       break;
@@ -172,7 +180,8 @@ uvmunmap(pagetable_t pagetable, uint64 va, uint64 npages, int do_free)
     if((pte = walk(pagetable, a, 0)) == 0)
       panic("uvmunmap: walk");
     if((*pte & PTE_V) == 0)
-      panic("uvmunmap: not mapped");
+      continue;
+    //  panic("uvmunmap: not mapped");
     if(PTE_FLAGS(*pte) == PTE_V)
       panic("uvmunmap: not a leaf");
     if(do_free){
@@ -428,4 +437,200 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
   } else {
     return -1;
   }
+}
+
+// if va == 0 return empty vma
+// else return vma that contains va
+struct vmarea*
+find_vma(struct proc* p, uint64 va)
+{
+  struct vmarea* vma = 0;
+  acquire(&p->vma_lock);
+  for (int i = 0; i < MAXVMA; i++)
+  {
+    if (!va)
+    {
+      if (p->vma[i].length == 0)
+      {
+        vma = &p->vma[i];
+        goto ret_vma;
+      }
+    }
+    else
+    {
+      if (p->vma[i].length && va >= p->vma[i].addr && va < p->vma[i].addr + p->vma[i].length)
+      {
+        vma = &p->vma[i];
+        goto ret_vma;
+      }
+    }
+  }
+  ret_vma:
+  release(&p->vma_lock);
+  return vma;
+}
+
+uint64
+mmap(uint64 addr, int length, int prot, int flags, int fd, int offset)
+{
+  if (addr != 0)
+  {
+    printf("mmap: addr must be 0\n");
+    return -1;
+  }
+  if (length <= 0)
+  {
+    printf("mmap: length must be greater than 0\n");
+    return -1;
+  }
+
+  struct proc *p = myproc();
+
+  if (p->ofile[fd] == 0)
+  {
+    printf("mmap: file not open");
+    return -1;
+  }
+
+  struct vmarea* vma = find_vma(p, 0);
+
+  if (vma == 0)
+  {
+    printf("mmap: out of vma\n");
+    return -1;
+  }
+
+  if ((flags & MAP_SHARED) && !(p->ofile[fd]->writable))
+    return -1;
+
+  vma->addr = PGROUNDUP(p->vma_start);
+  p->vma_start += length;
+  vma->length = length;
+  vma->f = filedup(p->ofile[fd]);
+  vma->type = flags;
+  vma->offset = offset;
+  vma->perm = PTE_U;
+
+  if (prot & PROT_READ)
+    vma->perm |= PTE_R;
+  if (prot & PROT_WRITE)
+    vma->perm |= PTE_W;
+
+  return vma->addr;
+}
+
+// write n bytes back to file, start from off
+// ignore writei error because page may not be allocated
+// inspired from filewrite
+void
+writeback(struct file* f, int off, uint64 addr, int n)
+{
+  int max = ((MAXOPBLOCKS-1-1-2) / 2) * BSIZE;
+  int i = 0;
+  while (i < n){
+    int n1 = n - i;
+    if(n1 > max)
+      n1 = max;
+
+    begin_op();
+    ilock(f->ip);
+    writei(f->ip, 1, addr + i, off, n1);
+    off += n1;
+    iunlock(f->ip);
+    end_op();
+
+    i += n1;
+  }
+}
+
+int
+munmap(uint64 va, int length)
+{
+  struct proc* p = myproc();
+  if (va % PGSIZE)
+  {
+    printf("munmap: va not aligned\n");
+    return -1;
+  }
+  struct vmarea* vma = find_vma(p, va);
+  if (vma == 0)
+  {
+    printf("munmap: vma not found\n");
+    return -1;
+  }
+
+  if (vma->type & MAP_SHARED)
+    writeback(vma->f, vma->offset, va, length);
+
+  uvmunmap(p->pagetable, va, length / PGSIZE, 1);
+  vma->length -= length;
+
+  if (va == vma->addr)
+  {
+    vma->addr += length;
+    vma->offset += length;
+  }
+
+  if (!vma->length)
+    fileclose(vma->f);
+
+  return 0;
+}
+
+int
+handle_pgfault(uint64 va, int is_write)
+{
+  // printf("pagefault: va=%p, is_write=%d\n", va, is_write);
+  struct proc* p = myproc();
+  if (va < VMAREA || va >= p->vma_start)
+  {
+    printf("pgfault: not mmap address\n");
+    return -1;
+  }
+
+  struct vmarea* vma = find_vma(p, va);
+
+  if (vma == 0)
+  {
+    printf("pgfault: mmap address not found\n");
+    return -1;
+  }
+
+  if ((is_write && !(vma->perm & PTE_W)) || (!is_write && !(vma->perm & PTE_R)))
+  {
+    printf("pgfault: permission denied\n");
+    return -1;
+  }
+
+  va = PGROUNDDOWN(va);
+  uint64 pa = (uint64)kalloc();
+  if (pa == 0)
+  {
+    printf("pgfault: out of memory\n");
+    return -1;
+  }
+
+  memset((void*)pa, 0, PGSIZE);
+
+  if (mappages(p->pagetable, va, PGSIZE, pa, vma->perm) != 0)
+  {
+    kfree((void*)pa);
+    printf("pgfault: mappages failed\n");
+    return -1;
+  }
+
+  uint offset = vma->offset + (va - vma->addr);
+  //printf("readi: inode ref=%p, va=%p, offset=%d\n", vma->f->ip->ref, va, offset);
+  begin_op();
+  ilock(vma->f->ip);
+  int read_res = readi(vma->f->ip, 1, va, offset, PGSIZE);
+  iunlock(vma->f->ip);
+  end_op();
+
+  if (read_res < 0)
+  {
+    printf("pgfault: read inode failed\n");
+    return -1;
+  }
+  return 0;
 }

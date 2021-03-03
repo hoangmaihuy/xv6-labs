@@ -62,6 +62,9 @@
 //   fixed-size stack
 //   expandable heap
 //   ...
+//   VMAREA
 //   TRAPFRAME (p->trapframe, used by the trampoline)
 //   TRAMPOLINE (the same page as in the kernel)
 #define TRAPFRAME (TRAMPOLINE - PGSIZE)
+
+#define VMAREA (MAXVA / 2)

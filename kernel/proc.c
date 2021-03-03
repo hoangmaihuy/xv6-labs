@@ -47,6 +47,7 @@ procinit(void)
   initlock(&pid_lock, "nextpid");
   for(p = proc; p < &proc[NPROC]; p++) {
       initlock(&p->lock, "proc");
+      initlock(&p->vma_lock, "vma_lock");
       p->kstack = KSTACK((int) (p - proc));
   }
 }
@@ -127,6 +128,10 @@ found:
     release(&p->lock);
     return 0;
   }
+
+  p->vma_start = VMAREA;
+  for (int i = 0; i < MAXVMA; i++)
+    p->vma[i].length = 0;
 
   // Set up new context to start executing at forkret,
   // which returns to user space.
@@ -700,16 +705,4 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
-}
-
-uint64
-mmap(uint64 addr, int length, int prot, int flags, int fd, int offset)
-{
-  return -1;
-}
-
-int
-munmap(uint64 addr, int length)
-{
-  return -1;
 }
