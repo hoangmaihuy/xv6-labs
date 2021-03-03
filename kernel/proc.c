@@ -701,3 +701,15 @@ procdump(void)
     printf("\n");
   }
 }
+
+uint64
+mmap(uint64 addr, int length, int prot, int flags, int fd, int offset)
+{
+  return -1;
+}
+
+int
+munmap(uint64 addr, int length)
+{
+  return -1;
+}
