@@ -90,7 +90,6 @@ struct vmarea
   int type; // MAP_SHARED, MAP_PRIVATE
   int offset; // addr map to offset from file
   struct file* f; // backed file
-  struct vmarea *next;
 };
 
 // Per-process state

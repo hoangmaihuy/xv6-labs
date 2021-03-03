@@ -492,6 +492,13 @@ mmap(uint64 addr, int length, int prot, int flags, int fd, int offset)
     return -1;
   }
 
+  struct file* f = p->ofile[fd];
+  // doesn't allow read/write mapping of a
+  // file opened read-only on MAP_SHARED
+  if ((flags & MAP_SHARED) && f->readable && (!f->writable)
+      && (prot & PROT_READ) && (prot & PROT_WRITE))
+    return -1;
+
   struct vmarea* vma = find_vma(p, 0);
 
   if (vma == 0)
@@ -500,13 +507,10 @@ mmap(uint64 addr, int length, int prot, int flags, int fd, int offset)
     return -1;
   }
 
-  if ((flags & MAP_SHARED) && !(p->ofile[fd]->writable))
-    return -1;
-
   vma->addr = PGROUNDUP(p->vma_start);
   p->vma_start += length;
   vma->length = length;
-  vma->f = filedup(p->ofile[fd]);
+  vma->f = filedup(f);
   vma->type = flags;
   vma->offset = offset;
   vma->perm = PTE_U;

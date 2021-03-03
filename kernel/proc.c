@@ -287,6 +287,15 @@ fork(void)
   }
   np->sz = p->sz;
 
+  // Copy vmarea from parent to child
+  np->vma_start = p->vma_start;
+  for (i = 0; i < MAXVMA; i++)
+  {
+    np->vma[i] = p->vma[i];
+    if (np->vma[i].length)
+      np->vma[i].f = filedup(np->vma[i].f);
+  }
+
   np->parent = p;
 
   // copy saved user registers.
@@ -357,6 +366,11 @@ exit(int status)
       p->ofile[fd] = 0;
     }
   }
+
+  // unmap remain vmarea
+  for (int i = 0; i < MAXVMA; i++)
+    if (p->vma[i].length)
+      munmap(p->vma[i].addr, p->vma[i].length);
 
   begin_op();
   iput(p->cwd);
