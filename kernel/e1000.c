@@ -102,7 +102,29 @@ e1000_transmit(struct mbuf *m)
   // the TX descriptor ring so that the e1000 sends it. Stash
   // a pointer so that it can be freed after sending.
   //
-  
+  acquire(&e1000_lock);
+  uint32 td_tail = regs[E1000_TDT];
+  struct tx_desc* tx_desc = &tx_ring[td_tail];
+  // printf("e1000_transmit tail=%d, m=%p\n", td_tail, tx_desc->addr);
+  // If E1000_TXD_STAT_DD is not set in the descriptor indexed by E1000_TDT,
+  // the E1000 hasn't finished the corresponding previous transmission request,
+  // so return an error.
+  if (tx_desc->status != E1000_TXD_STAT_DD)
+  {
+    // printf("e1000_transmit: tx_desc status is not done\n");
+    release(&e1000_lock);
+    return -1;
+  }
+
+  if (tx_desc->addr)
+    mbuffree((struct mbuf*)PGROUNDDOWN(tx_desc->addr));
+
+  tx_desc->addr = (uint64)m->head;
+  tx_desc->length = m->len;
+  tx_desc->cmd = E1000_TXD_CMD_EOP | E1000_TXD_CMD_RS;
+
+  regs[E1000_TDT] = (td_tail + 1) % TX_RING_SIZE;
+  release(&e1000_lock);
   return 0;
 }
 
@@ -115,6 +137,47 @@ e1000_recv(void)
   // Check for packets that have arrived from the e1000
   // Create and deliver an mbuf for each packet (using net_rx()).
   //
+  uint32 rx_head, rx_tail;
+  struct mbuf* m;
+  struct rx_desc* rx_desc;
+
+  loop:
+  acquire(&e1000_lock);
+  rx_tail = (regs[E1000_RDT] + 1) % RX_RING_SIZE;
+  rx_head = regs[E1000_RDH];
+  // printf("e1000_recv: head=%d, tail=%d\n", rx_head, rx_tail);
+  if (rx_head == rx_tail)
+  {
+    // printf("rx_ring overflow\n");
+    release(&e1000_lock);
+    return;
+  }
+  rx_desc = &rx_ring[rx_tail];
+  //printf("status=%p\n", rx_desc->status);
+  if (!(rx_desc->status & E1000_RXD_STAT_DD))
+  {
+    release(&e1000_lock);
+    return;
+  }
+
+  m = rx_mbufs[rx_tail];
+  m->len = rx_desc->length;
+
+  rx_mbufs[rx_tail] = mbufalloc(0);
+  if (rx_mbufs[rx_tail] == 0)
+  {
+    // printf("e1000_recv: mbuffalloc failed\n");
+    release(&e1000_lock);
+    return;
+  }
+  rx_desc->addr = (uint64)rx_mbufs[rx_tail]->head;
+  rx_desc->status = 0;
+  regs[E1000_RDT] = rx_tail;
+
+  release(&e1000_lock);
+  net_rx(m);
+
+  goto loop;
 }
 
 void
