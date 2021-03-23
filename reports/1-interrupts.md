@@ -62,7 +62,6 @@ user space asks for new process -> `fork()` -> `allocproc()` -> `forkret()` -> `
 sets up the first user process, which initializes the shell.
 - When users want to run a program, the shell call `fork()` and `exec()` to 
 allocate new process and load program code into memory.
-
 - `fork()` calls `allocproc()` to allocate new process, in which it sets up new context to start at 
 `forkret` [[kernel/proc.c:141](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L141)]. 
 - `forkret` calls `usertrapret()` to let process return to user space 
@@ -80,31 +79,26 @@ user space -> `uservec()` -> `usertrap()` -> `kerneltrap()` -> `kerneltrapret()`
 **Details**:
 
 - Interrupt from user space start at `uservec()` in supervisor mode but RISC-V does not switch the page table during trap, so at that time `satp` holds user page table. 
-
 - To continue executing `satp` must be set to kernel page table, xv6 resolves this problem by mapping trampoline page to the 
 same virtual address in both kernel address space  [[kernel/vm.c:42](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/vm.c#L42)] 
 and user address space [[kernel/proc.c:181](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L181)]. 
-
 - When `uservec` starts, `sscratch` holds process's trapframe, which is saved by `userret` 
 [[kernel/trampoline.S:137](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/trampoline.S#L137)]. 
 It swaps `a0` and `sscratch` then use `a0` to save all other registers in process's trapframe 
 [[kernel/trampoline.S:29](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/trampoline.S#29)]. 
-
 - `uservec` switch to kernel context by restoring kernel stack pointer and page table
 [[kernel/trampoline.S:67-79](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/trampoline.S#L67)]
 - `uservec` calls `usertrap()` to handle the traps, which sends all the interrupts and exceptions to `kerneltrap()` by setting `stvec` to `kernelvec` [[kernel/trap.c:37](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/trap.c#L37)].
 - When kernel has finished handling the traps, it calls `usertrapret()` which prepare to return to user space. 
-
 - `usertrapret` disables interrupts and change `stvec` back to `uservec` 
 [[kernel/trap.c:97](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/trap.c#87)]. 
 It also set up trapframe values that `uservec` will need when process next re-enters 
 the kernel and restore `pc`, `sstatus` and `satp` to prepare for continuing user program execution. 
 After that, it calls `userret` to return to user space.
-
 - `userret` takes process's trapframe and pagetable as arguments. 
 It first switchs to the user page table then restore all saved all registers from trapframe except `a0`. 
 Finally, it swaps `a0` and `sscratch`, which restores user `a0` and save trapframe 
 to `sscratch` for later use in `uservec`, then call `sret` to continue from user `pc` in user mode.
 
 ### 2.3 Why "trampoline"?
-The page is called "trampoline" because it "bounces" between kernel and user space.
+- The page is called "trampoline" because it "bounces" between kernel and user space.
