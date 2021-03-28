@@ -9,6 +9,7 @@
     - [Exercise 0: 源代码阅读](#exercise-0-源代码阅读)
     - [Exercise 1: System call tracing](#exercise-1-system-call-tracing)
     - [Exercise 2: Sysinfo](#exercise-2-sysinfo)
+    - [Result](#result)
   - [2. 遇到的困难以及收获](#2-遇到的困难以及收获)
   - [3. 对课程或Lab的意见和建议](#3-对课程或lab的意见和建议)
   - [4. 参考文献](#4-参考文献)
@@ -250,6 +251,10 @@ sys_sysinfo(void)
   return 0;
 }
 ```
+
+### Result
+`make grade` output:
+![make grade]("./../images/make_grade.png)
 
 ## 2. 遇到的困难以及收获
 Difficulties:
