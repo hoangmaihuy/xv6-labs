@@ -1,0 +1,111 @@
+# xv6 Process
+
+- [xv6 Process](#xv6-process)
+  - [1. Process data structure](#1-process-data-structure)
+  - [2. Process states](#2-process-states)
+  - [3. Process address space](#3-process-address-space)
+  - [4. Process creation](#4-process-creation)
+
+## 1. Process data structure
+
+A process is an instance of a program, i.e a running program. In xv6, a process is 
+described using a data structure `struct proc` in `kernel/proc.h`
+```c
+// Per-process state
+struct proc {
+  struct spinlock lock;
+
+  // p->lock must be held when using these:
+  enum procstate state;        // Process state
+  void *chan;                  // If non-zero, sleeping on chan
+  int killed;                  // If non-zero, have been killed
+  int xstate;                  // Exit status to be returned to parent's wait
+  int pid;                     // Process ID
+
+  // proc_tree_lock must be held when using this:
+  struct proc *parent;         // Parent process
+
+  // these are private to the process, so p->lock need not be held.
+  uint64 kstack;               // Virtual address of kernel stack
+  uint64 sz;                   // Size of process memory (bytes)
+  pagetable_t pagetable;       // User page table
+  struct trapframe *trapframe; // data page for trampoline.S
+  struct context context;      // swtch() here to run process
+  struct file *ofile[NOFILE];  // Open files
+  struct inode *cwd;           // Current directory
+  char name[16];               // Process name (debugging)
+};
+```
+Each process consists of user-space memory (instructions, data and user stack) and per-process state private to kernel (state, channel, context, kernel stack, trapframe, ...).
+
+Compare to Linux, xv6 process structure only holds important data which are necessary for xv6 to work:
+- A spinlock `lock` to protect process data in concurency
+- Process basic information: `pid`, `parent`, `name`
+- Execution state of process: `state`, `chan`, `killed`, `xstate`, `ofile`, `cwd`
+- Virtual memory management: `sz`, `pagetable`
+- Trap handling: `trapframe`, `kstack` 
+- Context switching: `context`
+
+When booting, xv6 creates a `init` process which is the root of process tree. xv6 uses a fixed-length array `struct proc proc[NPROC]` as process table. `NPROC` is maximum number of processes, which is defined as 64 in `kernel/param.h`.
+
+## 2. Process states
+
+xv6 process has 6 states:
+```c
+enum procstate { UNUSED, USED, SLEEPING, RUNNABLE, RUNNING, ZOMBIE }
+```
+
+Transition between process states:
+
+![xv6-process-states](./images/process-states.svg)
+
+- When xv6 is booting, it creates a process table and set all processes' state as `UNUSED`
+- When users call `fork()` to create new process, `fork()` calls `allocproc()` to 
+find an `UNUSED` process in process table. If there is one, `allocproc()` set its state as `USED`
+- After `fork()` finishes setting up new process, such as allocating trapframe and 
+copying memory, it change process's state from `USED` to `RUNNABLE`. New process is now ready to schedule
+- If scheduler chooses a process to run, it changes process's state from `RUNNABLE` to `RUNNING`
+- When a process is executing, there are three cases may happen:
+  - It calls `sleep()` or `wait` to wait for a child process to finish executing, so process's state changes from `RUNNING` to `SLEEPING`.
+  - It is trapped by timer interrupt, so it calls `yield()` to give up CPU and changes states to `RUNNABLE`
+  - It finishes execution and calls `exit()`, which changes its state to `ZOMBIE`. 
+- When a process is sleeping, it may be waked up or killed by another process. In both cases, process's state is set to `RUNNABLE`
+- Zombie process will be "reaped" by its parent process or `init` process by calling `freeproc()` function, which changes its state back to `UNUSED`.
+
+## 3. Process address space
+
+Each process has its own page table to translate virtual address to physical address.
+Physical address of root page table is saved in `pagetable` field in `struct proc`. Process virtual address space is continous, ranges from 0 to `MAXVA`. 
+Figure 3.4 in Chapter 3 of xv6 book shows the layout of user user memory of an executing process:
+
+![process-address-space](images/process-address-space.png)
+
+In the bottom are program's text and data. The stack is a single page, its initial 
+contents are created by `exec` system call. There is a guard page under stack to avoid 
+stack overflowing. Above stack is heap space, which users can dynamically allocate by calling `sbrk()`. On the top are `trapframe` which saves machine state and a `trampoline` page to transit between user space and kernel space when handling traps.
+
+## 4. Process creation
+
+In boot time, `main.c` calls `procinit` [kernel/proc.c:46] to initialize process 
+page table. `procinit()` initializes global locks `pid_lock` and `wait_lock`. Then 
+it iterates through proc table, initialize each process's lock and allocate its kernel stack.
+
+After that, `main.c` calls `userinit` [kernel/proc.c:226] to set up first user process.
+`init` process is the root of process table and will reap any `ZOMBIE` processes abandoned by parent process. `userinit` sets up page table, program counter and 
+stack pointer to make it starts executing `exec("/init")`.
+
+`init.c` simply creates a shell process and wait for any processes to finish. If the 
+shell exits, `init` restarts it. If a parentless process exits, `init` will reap it.
+
+User's program calls `fork()` system call to create new child process, which is a exact copy of parent process. `fork()` is implemented in `kernel/proc.c:270-319` and it's 
+quite straight-forward.
+
+- `fork()` firstly calls `allocproc()` to find an unused process in process table. 
+- `allocproc()` scans through process table `proc`. If found, it allocates new `pid`
+for that process, set its state to `USED`, allocates physical memory for `trapframe`, creates new pagetable which only maps trampoline page and set up context to let process 
+start executing at `forkret`. If there is no available process or any of above actions 
+fails, `allocproc()` calls `freeproc()` to release it and return 0.
+- If `allocproc()` success, `fork()` will copy all memory from parent process to child process, page by page. It then copies executing state of parent process, such as registers saved in trapframe, opened file descriptors, current working directory. If any actions fails, `fork()` also calls `freeproc()` and release process's lock.
+- After sucessfully setting up, `fork()` sets child process's parent and its state to 
+`RUNNABLE`. Now it is ready to be scheduled, in the next execution it will start executing at `forkret()` and return to user space.
+
