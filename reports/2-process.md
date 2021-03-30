@@ -61,16 +61,28 @@ Transition between process states:
 
 - When xv6 is booting, it creates a process table and set all processes' state as `UNUSED`
 - When users call `fork()` to create new process, `fork()` calls `allocproc()` to 
-find an `UNUSED` process in process table. If there is one, `allocproc()` set its state as `USED`
+find an `UNUSED` process in process table 
+[[kernel/proc.c:280](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L280)]. 
+If there is one, `allocproc()` set its state as `USED`
+[[kernel/proc.c:121](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L121)]
 - After `fork()` finishes setting up new process, such as allocating trapframe and 
-copying memory, it change process's state from `USED` to `RUNNABLE`. New process is now ready to schedule
-- If scheduler chooses a process to run, it changes process's state from `RUNNABLE` to `RUNNING`
+copying memory, it change process's state from `USED` to `RUNNABLE` 
+[[kernel/proc.c:315](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L315)]. New process is now ready to schedule
+- If scheduler chooses a process to run, it changes process's state from `RUNNABLE` to `RUNNING` 
+[[kernel/proc.c:454](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L454)]
 - When a process is executing, there are three cases may happen:
-  - It calls `sleep()` or `wait` to wait for a child process to finish executing, so process's state changes from `RUNNING` to `SLEEPING`.
+  - It calls `sleep()` or `wait` to wait for a child process to finish executing, so process's state changes from `RUNNING` to `SLEEPING` 
+  [[kernel/proc.c:545](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L545)] 
+  [[kernel/proc.c:426](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L426)]. 
   - It is trapped by timer interrupt, so it calls `yield()` to give up CPU and changes states to `RUNNABLE`
+  [[kernel/proc.c:500](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L500)]. 
   - It finishes execution and calls `exit()`, which changes its state to `ZOMBIE`. 
+  [[kernel/proc.c:372](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L372)]. 
 - When a process is sleeping, it may be waked up or killed by another process. In both cases, process's state is set to `RUNNABLE`
+  [[kernel/proc.c:568](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L568)] 
+  [[kernel/proc.c:589](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L589)]. 
 - Zombie process will be "reaped" by its parent process or `init` process by calling `freeproc()` function, which changes its state back to `UNUSED`.
+  [[kernel/proc.c:166](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L166)]. 
 
 ## 3. Process address space
 
@@ -86,18 +98,21 @@ stack overflowing. Above stack is heap space, which users can dynamically alloca
 
 ## 4. Process creation
 
-In boot time, `main.c` calls `procinit` [kernel/proc.c:46] to initialize process 
+In boot time, `main.c` calls `procinit` 
+[[kernel/proc.c:46](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L46)] to initialize process 
 page table. `procinit()` initializes global locks `pid_lock` and `wait_lock`. Then 
 it iterates through proc table, initialize each process's lock and allocate its kernel stack.
 
-After that, `main.c` calls `userinit` [kernel/proc.c:226] to set up first user process.
+After that, `main.c` calls `userinit` 
+[[kernel/proc.c:226](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L226)] to set up first user process.
 `init` process is the root of process table and will reap any `ZOMBIE` processes abandoned by parent process. `userinit` sets up page table, program counter and 
 stack pointer to make it starts executing `exec("/init")`.
 
 `init.c` simply creates a shell process and wait for any processes to finish. If the 
 shell exits, `init` restarts it. If a parentless process exits, `init` will reap it.
+[[kernel/init.c](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/init.c)]
 
-User's program calls `fork()` system call to create new child process, which is a exact copy of parent process. `fork()` is implemented in `kernel/proc.c:270-319` and it's 
+User's program calls `fork()` system call to create new child process, which is a exact copy of parent process. `fork()` is implemented in [kernel/proc.c:270-319] and it's 
 quite straight-forward.
 
 - `fork()` firstly calls `allocproc()` to find an unused process in process table. 
