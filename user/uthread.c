@@ -34,8 +34,8 @@ struct thread {
   char                  stack[STACK_SIZE]; /* the thread's stack */
   int                   state;             /* FREE, RUNNING, RUNNABLE */
   struct thread_context context;
-
 };
+
 struct thread all_thread[MAX_THREAD];
 struct thread *current_thread;
 extern void thread_switch(struct thread_context* old, struct thread_context* new);
