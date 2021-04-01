@@ -5,6 +5,7 @@
   - [2. Process states](#2-process-states)
   - [3. Process address space](#3-process-address-space)
   - [4. Process creation](#4-process-creation)
+  - [5. Scheduling](#5-scheduling)
 
 ## 1. Process data structure
 
@@ -112,8 +113,9 @@ stack pointer to make it starts executing `exec("/init")`.
 shell exits, `init` restarts it. If a parentless process exits, `init` will reap it.
 [[kernel/init.c](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/init.c)]
 
-User's program calls `fork()` system call to create new child process, which is a exact copy of parent process. `fork()` is implemented in [kernel/proc.c:270-319] and it's 
-quite straight-forward.
+User's program calls `fork()` system call to create new child process, which is a exact copy of parent process. `fork()` is implemented in 
+[[kernel/proc.c:270-319](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L270)]
+ and it's quite straight-forward.
 
 - `fork()` firstly calls `allocproc()` to find an unused process in process table. 
 - `allocproc()` scans through process table `proc`. If found, it allocates new `pid`
@@ -124,3 +126,24 @@ fails, `allocproc()` calls `freeproc()` to release it and return 0.
 - After sucessfully setting up, `fork()` sets child process's parent and its state to 
 `RUNNABLE`. Now it is ready to be scheduled, in the next execution it will start executing at `forkret()` and return to user space.
 
+## 5. Scheduling
+
+After initializing all neccessary stuffs such as process tables, virtual memory, trap handlers,... kernel runs scheduler on each CPU by calling `scheduler()` [[kernel/main.c:44](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/main.c#L44)].
+
+The scheduler runs in a form of a special process per CPU, each running `scheduler()` function
+[[kernel/proc.c:438](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L438)]. It loops forever, in each loop the following things happen:
+- Scan through process table and choose a `RUNNABLE` process to run
+- Mark chosen process state to `RUNNING` and sets CPU's current process to it.
+- Call `swtch` to switch context from scheduler to chosen process.
+- Chosen process runs until it is interrupted by timer interrupt. `usertrap()` calls `yield()` to give up the CPU to scheduler [[kernel/trap.c:81](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/trap.c#L81)].
+- `yield()` holds process's lock, changes its state back to `RUNNABLE` and calls `sched()` to switch to scheduler [[kernel/proc.c:496](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L496)].
+- `sched()` makes sure that process's lock is held and interrupt is disable, check process's state then calls `swtch` to switch back to scheduler [[kernel/proc.c:475](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L475)]
+- Till this point, CPU should return to scheduler at [[kernel/proc.c:460](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L460)]. Scheduler releases process's lock and repeats the cycle.
+
+Context switching function `swtch` is implemented in `swtch.S` [[kernel/switch.S](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/swtch.S)]. It takes two arguments: `struct context* old` and `struct context* new`, saves callee-registers in `old` and load registers in `new`, then returns. `swtch` does not save `pc` but saves `ra`, `sp` and callee-registers because caller-registers are saved by calling C function. 
+
+Some points worth noticing about the scheduler:
+- It is obvious that xv6 scheduling algorithm is Round-Robin
+- scheduler's context is saved in `cpu->context`, it calls `swtch(&c->context, &p->context)` to switch to chosen process [[kernel/proc.c:456](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L456)] and `swtch(&p->context, &mycpu()->context)` to switch back [[kernel/proc.c:490](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L490)].
+- When switching from scheduler to user process, scheduler first holds process's lock [[kernel/proc.c:449](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L449)] then the lock is released by switched-to code [[kernel/proc.c:502](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L502)]. The same rule is applied when switching from user process to scheduler [[kernel/proc.c:499](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L499)] 
+[[kernel/proc.c:462](https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/proc.c#L462)]. These rules is to avoid scheduler on two different CPU choosing the same process.
