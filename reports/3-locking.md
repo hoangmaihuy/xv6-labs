@@ -1,6 +1,9 @@
 # xv6 Locks
 
-[toc]
+- [xv6 Locks](#xv6-locks)
+  - [1. Introduction](#1-introduction)
+  - [2. spinlock](#2-spinlock)
+  - [3. sleeplock](#3-sleeplock)
 
 ## 1. Introduction
 
@@ -56,7 +59,7 @@ In both functions, they have to acquire the lock `kmem.lock` before reading and 
 
 And there are many serious bugs may happen if we don't use any concurrency control techniques. xv6 uses two type of locks to synchronize concurrency: **spinlock** and **sleeplock**. Figure 6.3 in xv6 books lists all locks used in xv6
 
-![image-20210411140632063](C:\Users\pynhp\Git\xv6-labs\reports\images\xv6-locks.png)
+![xv6-locks](./images/xv6-locks.png)
 
 ## 2. spinlock
 
