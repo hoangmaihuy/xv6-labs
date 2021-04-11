@@ -40,7 +40,7 @@ struct proc {
 Each process consists of user-space memory (instructions, data and user stack) and per-process state private to kernel (state, channel, context, kernel stack, trapframe, ...).
 
 Compare to Linux, xv6 process structure only holds important data which are necessary for xv6 to work:
-- A spinlock `lock` to protect process data in concurency
+- A spinlock `lock` to protect process data in concurrency
 - Process basic information: `pid`, `parent`, `name`
 - Execution state of process: `state`, `chan`, `killed`, `xstate`, `ofile`, `cwd`
 - Virtual memory management: `sz`, `pagetable`
