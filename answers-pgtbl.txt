@@ -1,0 +1,12 @@
+- According to Figure 3.4 in xv6 books, page 0 is process's text and data an have read/write/execute permission. 
+Page 1 is a guard page, so `PTE_U = 0` and user can't access this page. 
+Page 2 is process's stack. `exec.c` maps these two pages in line 67.
+The highest two pages, page 510 is process's trapframe and 511 is trampoline page, 
+which is mapped in `proc_pagetable` at `kernel/proc.c:181`
+
+- The third test  `srcva + len < srcva` is necessary in `copyin_new()` 
+because both `srcva` and `len` is passed by user process and can be harmful. 
+Both `srcva` and `len` are `uint64`, so if `srcva + len` overflows `uint64`, 
+it will become `(srcva + len) % 2^64`. For example, if `p->sz = 10, srcva = 1, 
+len = 2^64-1`, the first two tests fail because `srcva < p->sz` 
+and `srcva+len=0 < p->sz`, but the third test is true because `srcva+len < srcva`.
