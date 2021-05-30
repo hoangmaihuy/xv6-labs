@@ -1,6 +1,15 @@
 # xv6 File System
 
-
+- [xv6 File System](#xv6-file-system)
+  - [1. File system structure](#1-file-system-structure)
+  - [2. Disk layer](#2-disk-layer)
+  - [3. Buffer cache layer](#3-buffer-cache-layer)
+  - [4. Logging layer](#4-logging-layer)
+  - [5. Block allocator](#5-block-allocator)
+  - [6. Inode layer](#6-inode-layer)
+  - [6. Directory layer](#6-directory-layer)
+  - [7. Pathname](#7-pathname)
+  - [8. File descriptor and System calls](#8-file-descriptor-and-system-calls)
 
 ## 1. File system structure
 
